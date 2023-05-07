@@ -16,6 +16,7 @@ app.get('/', function (req, res) {
 app.get('/submitTicket/:sector/:product/:contact/:name', function (req, res) {
     try{
         mailClient.sendMail(req.params.sector, req.params.product, req.params.contact, req.params.name);
+        mailClient.sendCustomerMail(req.params.sector, req.params.product, req.params.contact, req.params.name)
         mongodbClient.createTicket(req.params.sector, req.params.product, req.params.contact, req.params.name)
         res.send("sucsess")
         res.end()

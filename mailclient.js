@@ -36,13 +36,47 @@ async function sendMail(sector, product, contactEmail, name){
 
         }
 
-        const result = await transport.sendMail(mailOptions)
-        return result
+        return await transport.sendMail(mailOptions)
 
     } catch (e) {
         return e
     }
 }
+
+async function sendCustomerMail(sector, product, contactEmail, name){
+
+    try{
+        const accessToken = await oAuth2Client.getAccessToken();
+
+        const transport = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                type: 'OAuth2',
+                user: 'colabs101@gmail.com',
+                clientId: CLIENT_ID,
+                clientSecret: CLIENT_SECRET,
+                refreshToken: REFRESH_TOKEN,
+                accessToken: accessToken,
+            }
+        })
+
+        const mailOptions = {
+            from: 'CoLabs software <colabs101@gmail.com>',
+            to: contactEmail,
+            subject: 'CoLabs Service Request',
+            text: "Thanks for contacting colabs software, you request has been processed in our system and we will be in contact shortly to discuss your requirments and needs",
+            //html: '<h1> hello luca this is a test of the email <h1>',
+
+        }
+
+        return await transport.sendMail(mailOptions)
+
+    } catch (e) {
+        return e
+    }
+
+}
+
 
 
 //sendMail()
@@ -50,3 +84,4 @@ async function sendMail(sector, product, contactEmail, name){
     //.catch((e) => console.log(e.message));
 
 module.exports.sendMail = sendMail;
+module.exports.sendCustomerMail = sendCustomerMail;
